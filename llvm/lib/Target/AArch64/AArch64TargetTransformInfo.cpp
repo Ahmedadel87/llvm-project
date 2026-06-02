@@ -2511,6 +2511,33 @@ instCombineSVEVectorBinOp(InstCombiner &IC, IntrinsicInst &II) {
   return IC.replaceInstUsesWith(II, BinOp);
 }
 
+static std::optional<Instruction *> instCombineSVEVectorMla(InstCombiner &IC,
+                                                            IntrinsicInst &II) {
+  bool InactiveLanesAreUndefined =
+      II.getIntrinsicID() == Intrinsic::aarch64_sve_mla_u;
+  Value *Pred = II.getOperand(0);
+  if (!InactiveLanesAreUndefined && !isAllActivePredicate(Pred))
+    return std::nullopt;
+
+  Value *Acc = II.getArgOperand(1);
+  Value *MulOp0 = II.getArgOperand(2);
+  Value *MulOp1 = II.getArgOperand(3);
+
+  // For all-active predicates, mla(acc, x, 1) is add(acc, x) and
+  // mla(acc, x, -1) is sub(acc, x). For mla_u,
+  // inactive lanes are undefined, so it is also valid to drop the predicate.
+  if (match(MulOp0, m_One()))
+    return IC.replaceInstUsesWith(II, IC.Builder.CreateAdd(Acc, MulOp1));
+  if (match(MulOp1, m_One()))
+    return IC.replaceInstUsesWith(II, IC.Builder.CreateAdd(Acc, MulOp0));
+  if (match(MulOp0, m_AllOnes()))
+    return IC.replaceInstUsesWith(II, IC.Builder.CreateSub(Acc, MulOp1));
+  if (match(MulOp1, m_AllOnes()))
+    return IC.replaceInstUsesWith(II, IC.Builder.CreateSub(Acc, MulOp0));
+
+  return std::nullopt;
+}
+
 static std::optional<Instruction *> instCombineSVEVectorAdd(InstCombiner &IC,
                                                             IntrinsicInst &II) {
   if (auto MLA = instCombineSVEVectorFuseMulAddSub<Intrinsic::aarch64_sve_mul,
@@ -3073,6 +3100,9 @@ AArch64TTIImpl::instCombineIntrinsic(InstCombiner &IC,
     return instCombineSVEVectorFuseMulAddSub<Intrinsic::aarch64_sve_mul_u,
                                              Intrinsic::aarch64_sve_mla_u>(
         IC, II, true);
+  case Intrinsic::aarch64_sve_mla:
+  case Intrinsic::aarch64_sve_mla_u:
+    return instCombineSVEVectorMla(IC, II);
   case Intrinsic::aarch64_sve_sub:
     return instCombineSVEVectorSub(IC, II);
   case Intrinsic::aarch64_sve_sub_u:
