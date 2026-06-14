@@ -363,15 +363,13 @@ void AMDGPUOpenMPToolChain::addClangTargetOptions(
     const llvm::opt::ArgList &DriverArgs, llvm::opt::ArgStringList &CC1Args,
     llvm::StringRef BoundArch, Action::OffloadKind DeviceOffloadingKind) const {
 
-  StringRef GPUArch = DriverArgs.getLastArgValue(options::OPT_march_EQ);
-
   assert(DeviceOffloadingKind == Action::OFK_OpenMP &&
          "Only OpenMP offloading kinds are supported.");
 
   // Extract all the -m options
   std::vector<llvm::StringRef> Features;
   amdgpu::getAMDGPUTargetFeatures(getDriver(), getTriple(), DriverArgs,
-                                  Features, GPUArch);
+                                  Features, BoundArch);
 
   for (auto OneFeature : unifyTargetFeatures(Features)) {
     CC1Args.push_back("-target-feature");
@@ -430,7 +428,7 @@ void AMDGPUOpenMPToolChain::addClangTargetOptions(
     return;
 
   std::string BitcodeSuffix;
-  BitcodeSuffix = llvm::Twine("old-amdgpu-" + GPUArch).str();
+  BitcodeSuffix = llvm::Twine("old-amdgpu-" + BoundArch).str();
 
   addDirectoryList(DriverArgs, LibraryPaths, "", "HIP_DEVICE_LIB_PATH");
 
