@@ -539,6 +539,8 @@ public:
         castKind = cir::CastKind::integral;
       else if (mlir::isa<cir::FPTypeInterface>(dstTy))
         castKind = cir::CastKind::int_to_float;
+      else if (mlir::isa<cir::BoolType>(dstTy))
+        castKind = cir::CastKind::int_to_bool;
       else
         llvm_unreachable("Internal error: Cast to unexpected type");
     } else if (mlir::isa<cir::FPTypeInterface>(srcTy)) {
@@ -553,6 +555,8 @@ public:
       } else if (mlir::isa<cir::FPTypeInterface>(dstTy)) {
         // TODO: split this to createFPExt/createFPTrunc
         return builder.createFloatingCast(src, fullDstTy);
+      } else if (mlir::isa<cir::BoolType>(dstTy)) {
+        castKind = cir::CastKind::float_to_bool;
       } else {
         llvm_unreachable("Internal error: Cast to unexpected type");
       }
@@ -731,7 +735,7 @@ public:
 
     // Store the updated result through the lvalue
     if (lv.isBitField())
-      return cgf.emitStoreThroughBitfieldLValue(RValue::get(value), lv);
+      value = cgf.emitStoreThroughBitfieldLValue(RValue::get(value), lv);
     else
       cgf.emitStoreThroughLValue(RValue::get(value), lv);
 
