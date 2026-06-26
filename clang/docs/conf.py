@@ -15,24 +15,11 @@ from __future__ import absolute_import, division, print_function
 import sys, os
 from datetime import date
 
-import llvm_sphinx
 from llvm_sphinx import *  # see llvm-project/utils/docs/README.md
 
 globals().update(common_conf(tags, markdown=Markdown.EXCEPT_MAN))
 
 myst_enable_extensions += ["deflist"]
-
-llvm_project_root = os.path.abspath(
-    os.path.join(
-        os.path.dirname(llvm_sphinx.__file__), os.pardir, os.pardir, os.pardir
-    )
-)
-sys.path.append(os.path.join(llvm_project_root, "mlir", "utils", "pygments"))
-from mlir_lexer import MlirLexer
-
-
-def setup(app):
-    app.add_lexer("mlir", MlirLexer)
 
 # -- General configuration -----------------------------------------------------
 
