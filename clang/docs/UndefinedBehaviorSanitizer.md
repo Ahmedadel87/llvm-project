@@ -214,38 +214,38 @@ Available checks are:
 
 You can also use the following check groups:
 
-: - `-fsanitize=undefined`: All of the checks listed above other than
-    `float-divide-by-zero`, `unsigned-integer-overflow`,
-    `implicit-conversion`, `local-bounds`, `vptr` and the
-    `nullability-*` group of checks.
-  - `-fsanitize=undefined-trap`: Deprecated alias of
-    `-fsanitize=undefined`.
-  - `-fsanitize=implicit-integer-truncation`: Catches lossy integral
-    conversions. Enables `implicit-signed-integer-truncation` and
-    `implicit-unsigned-integer-truncation`.
-  - `-fsanitize=implicit-integer-arithmetic-value-change`: Catches implicit
-    conversions that change the arithmetic value of the integer. Enables
-    `implicit-signed-integer-truncation` and `implicit-integer-sign-change`.
-  - `-fsanitize=implicit-integer-conversion`: Checks for suspicious
-    behavior of implicit integer conversions. Enables
-    `implicit-unsigned-integer-truncation`,
-    `implicit-signed-integer-truncation`, and
-    `implicit-integer-sign-change`.
-  - `-fsanitize=implicit-conversion`: Checks for suspicious
-    behavior of implicit conversions. Enables
-    `implicit-integer-conversion`, and
-    `implicit-bitfield-conversion`.
-  - `-fsanitize=integer`: Checks for undefined or suspicious integer
-    behavior (e.g. unsigned integer overflow).
-    Enables `signed-integer-overflow`, `unsigned-integer-overflow`,
-    `shift`, `integer-divide-by-zero`,
-    `implicit-unsigned-integer-truncation`,
-    `implicit-signed-integer-truncation`, and
-    `implicit-integer-sign-change`.
-  - `-fsanitize=nullability`: Enables `nullability-arg`,
-    `nullability-assign`, and `nullability-return`. While violating
-    nullability does not have undefined behavior, it is often unintentional,
-    so UBSan offers to catch it.
+- `-fsanitize=undefined`: All of the checks listed above other than
+  `float-divide-by-zero`, `unsigned-integer-overflow`,
+  `implicit-conversion`, `local-bounds`, `vptr` and the
+  `nullability-*` group of checks.
+- `-fsanitize=undefined-trap`: Deprecated alias of
+  `-fsanitize=undefined`.
+- `-fsanitize=implicit-integer-truncation`: Catches lossy integral
+  conversions. Enables `implicit-signed-integer-truncation` and
+  `implicit-unsigned-integer-truncation`.
+- `-fsanitize=implicit-integer-arithmetic-value-change`: Catches implicit
+  conversions that change the arithmetic value of the integer. Enables
+  `implicit-signed-integer-truncation` and `implicit-integer-sign-change`.
+- `-fsanitize=implicit-integer-conversion`: Checks for suspicious
+  behavior of implicit integer conversions. Enables
+  `implicit-unsigned-integer-truncation`,
+  `implicit-signed-integer-truncation`, and
+  `implicit-integer-sign-change`.
+- `-fsanitize=implicit-conversion`: Checks for suspicious
+  behavior of implicit conversions. Enables
+  `implicit-integer-conversion`, and
+  `implicit-bitfield-conversion`.
+- `-fsanitize=integer`: Checks for undefined or suspicious integer
+  behavior (e.g. unsigned integer overflow).
+  Enables `signed-integer-overflow`, `unsigned-integer-overflow`,
+  `shift`, `integer-divide-by-zero`,
+  `implicit-unsigned-integer-truncation`,
+  `implicit-signed-integer-truncation`, and
+  `implicit-integer-sign-change`.
+- `-fsanitize=nullability`: Enables `nullability-arg`,
+  `nullability-assign`, and `nullability-return`. While violating
+  nullability does not have undefined behavior, it is often unintentional,
+  so UBSan offers to catch it.
 
 ### Volatile
 
